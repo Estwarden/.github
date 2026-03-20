@@ -4,7 +4,7 @@
 
 **Open-source Baltic Security Intelligence Platform**
 
-[Dashboard](https://estwarden.eu) · [Collectors](https://github.com/Estwarden/collectors) · [Research](https://github.com/Estwarden/research)
+[Dashboard](https://estwarden.eu) · [Collectors](https://github.com/Estwarden/collectors) · [Research](https://github.com/Estwarden/research) · [Integrations](https://github.com/Estwarden/integrations)
 
 </div>
 
@@ -70,3 +70,16 @@ All open-source components are MIT licensed.
 **[estwarden.eu](https://estwarden.eu)** — Real-time Baltic security intelligence
 
 </div>
+
+### 🔌 Integrations
+
+Connect EstWarden to your tools:
+
+- **[MCP Server](https://github.com/Estwarden/integrations/tree/main/mcp-server)** — Any LLM can query threat data via Model Context Protocol
+- **[Home Assistant](https://github.com/Estwarden/integrations/tree/main/home-assistant)** — Smart home threat level sensors + automations
+- **[Grafana Dashboards](https://github.com/Estwarden/integrations/tree/main/grafana)** — Pre-built monitoring dashboards
+- **[Telegram Bot](https://github.com/Estwarden/integrations/tree/main/telegram-bot)** — Query threats from Telegram
+- **[CLI](https://github.com/Estwarden/integrations/tree/main/cli)** — Terminal one-liner for threat data
+- **[n8n Workflows](https://github.com/Estwarden/integrations/tree/main/n8n-workflows)** — Visual automation (Slack, Email, Notion)
+
+All integrations use the public API — no key required.
