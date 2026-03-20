@@ -2,30 +2,41 @@
 
 # 🛡 EstWarden
 
-**Open-source Baltic Security Intelligence Platform**
+**Open-source Baltic Security Intelligence**
 
-[Dashboard](https://estwarden.eu) · [Collectors](https://github.com/Estwarden/collectors) · [Research](https://github.com/Estwarden/research) · [Integrations](https://github.com/Estwarden/integrations)
+[Live Dashboard](https://estwarden.eu) · [Collectors](https://github.com/Estwarden/collectors) · [Research](https://github.com/Estwarden/research) · [Integrations](https://github.com/Estwarden/integrations)
 
 </div>
 
 ---
 
-EstWarden is an automated OSINT platform that monitors security threats, disinformation campaigns, and influence operations targeting the Baltic states. It collects data from 20+ public sources, classifies narratives using LLM models, detects coordinated campaigns, and presents everything on a real-time dashboard.
+EstWarden is an automated OSINT platform monitoring security threats, disinformation campaigns, and influence operations targeting the Baltic states. It collects data from 20+ public sources, classifies narratives with LLMs, detects coordinated campaigns, and publishes a real-time threat dashboard.
 
-### 🔍 What we monitor
+### What we monitor
 
-| Domain | Sources | What |
-|--------|---------|------|
-| **Military posture** | ADS-B, AIS, FIRMS, satellite | Aircraft, vessels, thermal anomalies at military bases |
-| **Disinformation** | RSS (54 feeds), Telegram, YouTube | Russian-language media, state outlets, pro-Kremlin channels |
-| **Electronic warfare** | GPSJam, NOTAM | GPS interference zones, airspace restrictions |
-| **Geopolitical** | ACLED, GDELT, embassy advisories | Conflict events, military news, travel advisories |
-| **Economic** | Elering, statistics offices | Energy prices, economic indicators |
-| **Cyber** | IODA, CERT feeds | Internet outages, cyber incidents |
+| Domain | Sources |
+|--------|---------|
+| **Military** | ADS-B flights, AIS vessels, NATO NOTAMs, satellite thermal anomalies |
+| **Disinformation** | 54 RSS feeds (Baltic, Russian state, independent media), Telegram, YouTube |
+| **Electronic warfare** | GPS jamming zones, airspace restrictions |
+| **Geopolitical** | ACLED conflict events, GDELT military news, embassy advisories |
+| **Economic** | Electricity prices, economic indicators |
+| **Cyber** | Internet outage monitoring, CERT feeds |
 
-### 📊 Threat Assessment
+### Composite Threat Index
 
-Signals are fused into a **Composite Threat Index** (0-100) using weighted anomaly detection across all sources. The narrative classifier detects five categories of Baltic-targeted information operations:
+All signals are fused into a daily **CTI score** (0–100):
+
+```
+GREEN  (0–24)   Normal baseline
+YELLOW (25–49)  Elevated activity
+ORANGE (50–74)  Significant concern
+RED    (75–100) Critical threat
+```
+
+### Narrative taxonomy
+
+Information operations are classified into five Baltic-targeted categories:
 
 | Code | Narrative |
 |------|-----------|
@@ -35,51 +46,41 @@ Signals are fused into a **Composite Threat Index** (0-100) using weighted anoma
 | N4 | Delegitimization |
 | N5 | Isolation / Victimhood |
 
-### 🤝 Contribute
+### Repositories
 
-We welcome contributions to our open-source components:
+| Repo | Description |
+|------|-------------|
+| **[collectors](https://github.com/Estwarden/collectors)** | Data collection pipelines — 14 collectors, enrichment DAGs, Dagu workflows. MIT. |
+| **[research](https://github.com/Estwarden/research)** | CTI methodology, threat index math, architecture docs. MIT. |
+| **[integrations](https://github.com/Estwarden/integrations)** | MCP server, Home Assistant, Grafana dashboards, Telegram bot, CLI. MIT. |
 
-- **[Estwarden/collectors](https://github.com/Estwarden/collectors)** — Data collection pipelines. Write a new collector script, submit a PR. No special access needed — collectors talk to the Data API, never to the database directly.
+### Public API
 
-- **[Estwarden/research](https://github.com/Estwarden/research)** — CTI methodology, threat index mathematics, Jupyter notebooks. Help improve the analytical models.
-
-**Good first contributions:**
-- Add a new RSS feed to `config/feeds.yaml`
-- Write a collector for a public data source we don't cover yet
-- Improve the narrative classifier prompt
-- Add country-specific configurations (Latvia, Lithuania, Finland)
-- Write Jupyter notebooks for threat index calibration
-
-### 🏗 Architecture
+No key required. JSON responses.
 
 ```
-Public sources → Collector scripts → Data API → PostgreSQL → Dashboard
-                    (Dagu DAGs)       (private)              (estwarden.eu)
+GET /api/threat-index        — CTI score + level
+GET /api/today               — daily report
+GET /api/history?days=30     — threat trend
+GET /api/influence/narratives — narrative activity
+GET /api/influence/campaigns  — detected campaigns
+GET /feed.xml                — RSS feed
 ```
 
-Collectors are scheduled by [Dagu](https://github.com/dagu-org/dagu) (Go workflow engine). They fetch data from public APIs and submit signals through an authenticated Data API. The dashboard reads from the database and presents intelligence.
+Base URL: `https://estwarden.eu`
 
-### 📄 License
+### Contribute
 
-All open-source components are MIT licensed.
+- **New collector** — write a Python/bash script that fetches from a public source, submit to [collectors](https://github.com/Estwarden/collectors)
+- **Integration** — connect EstWarden to your tool, submit to [integrations](https://github.com/Estwarden/integrations)
+- **Research** — improve CTI weighting, add notebooks, submit to [research](https://github.com/Estwarden/research)
+
+Good first issues: add an RSS feed, write a collector for a source we don't cover, improve the narrative classifier, add country configs for Latvia/Lithuania.
 
 ---
 
 <div align="center">
 
-**[estwarden.eu](https://estwarden.eu)** — Real-time Baltic security intelligence
+**[estwarden.eu](https://estwarden.eu)**
 
 </div>
-
-### 🔌 Integrations
-
-Connect EstWarden to your tools:
-
-- **[MCP Server](https://github.com/Estwarden/integrations/tree/main/mcp-server)** — Any LLM can query threat data via Model Context Protocol
-- **[Home Assistant](https://github.com/Estwarden/integrations/tree/main/home-assistant)** — Smart home threat level sensors + automations
-- **[Grafana Dashboards](https://github.com/Estwarden/integrations/tree/main/grafana)** — Pre-built monitoring dashboards
-- **[Telegram Bot](https://github.com/Estwarden/integrations/tree/main/telegram-bot)** — Query threats from Telegram
-- **[CLI](https://github.com/Estwarden/integrations/tree/main/cli)** — Terminal one-liner for threat data
-- **[n8n Workflows](https://github.com/Estwarden/integrations/tree/main/n8n-workflows)** — Visual automation (Slack, Email, Notion)
-
-All integrations use the public API — no key required.
